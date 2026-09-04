@@ -1,5 +1,5 @@
 import { PageHeader, Button } from '../components';
-import { MarketplaceListingsPlaceholder } from '../features/marketplace';
+import { MarketplaceFeed } from '../features/marketplace';
 
 /**
  * Route: /listings
@@ -33,9 +33,10 @@ export default function ListingsPage() {
 
       <div className="section section-white">
         <div className="container">
-          <MarketplaceListingsPlaceholder />
+          <MarketplaceFeed />
         </div>
       </div>
     </div>
   );
 }
+

@@ -143,3 +143,26 @@
   padding: 0 1.25rem 1.25rem;
   margin-top: auto;
 }
+
+.produce-card-call-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(22, 101, 52, 0.2);
+}
+
+.produce-card-call-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(22, 101, 52, 0.3);
+  color: #ffffff;
+}
+
+.produce-card-call-btn:active {
+  transform: translateY(0);
+}
+
