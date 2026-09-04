@@ -1,8 +1,9 @@
+.finder-container,
 .finder-placeholder-container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 680px;
+  max-width: 960px;
   margin: 0 auto;
   width: 100%;
 }
@@ -12,6 +13,9 @@
   flex-direction: column;
   gap: 1.5rem;
   text-align: left;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .finder-card-header {
@@ -31,12 +35,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .finder-form-title {
   font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-dark, #1a202c);
+  margin: 0;
 }
 
+.finder-form,
 .finder-mock-form {
   display: flex;
   flex-direction: column;
@@ -51,38 +60,101 @@
 
 @media (min-width: 580px) {
   .finder-grid-row {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
-.finder-mock-radius-tabs {
-  display: flex;
-  gap: 0.35rem;
-  background-color: var(--bg-subtle);
-  padding: 0.25rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-}
-
-.radius-tab {
-  flex: 1;
-  padding: 0.45rem 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  border-radius: var(--radius-sm);
-  cursor: not-allowed;
-  text-align: center;
-}
-
-.radius-tab.active {
-  background-color: var(--bg-surface);
-  color: var(--primary-800);
-  box-shadow: var(--shadow-sm);
-}
-
 .finder-form-actions {
+  margin-top: 0.5rem;
+}
+
+/* State Boxes (Loading, Error, No Results) */
+.finder-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  gap: 0.75rem;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.finder-spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid var(--border-light, #e2e8f0);
+  border-top-color: var(--primary-600, #16a34a);
+  border-radius: 50%;
+  animation: finder-spin 0.8s linear infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes finder-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.finder-state-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.finder-state-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-dark, #1f2937);
+  margin: 0;
+}
+
+.finder-state-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted, #4b5563);
+  margin: 0;
+  max-width: 500px;
+}
+
+.finder-state-subtext {
+  font-size: 0.875rem;
+  color: var(--text-muted, #6b7280);
+  margin: 0;
+}
+
+.finder-error-box {
+  border-left: 4px solid #ef4444;
+  background-color: #fef2f2;
+}
+
+.finder-retry-btn {
+  margin-top: 0.5rem;
+}
+
+/* Matching Results Grid */
+.finder-results-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.finder-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-light, #e2e8f0);
+}
+
+.finder-results-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-dark, #1f2937);
+  margin: 0;
+}
+
+.finder-results-grid {
   margin-top: 0.5rem;
 }

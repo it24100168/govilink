@@ -1,5 +1,5 @@
 import { PageHeader } from '../components';
-import { FindProducePlaceholder } from '../features/finder';
+import { ProduceFinder } from '../features/finder';
 
 /**
  * Route: /find-produce
@@ -18,7 +18,7 @@ export default function FindProducePage() {
 
       <div className="section section-white">
         <div className="container">
-          <FindProducePlaceholder />
+          <ProduceFinder />
         </div>
       </div>
     </div>
