@@ -69,25 +69,31 @@ In Sri Lanka, millions of home gardeners, rooftop growers, and smallholders harv
 
 ## 🛠️ Technologies Used
 
-| Technology | Purpose |
+- **Frontend**: React.js (React 19), Vite, JavaScript (ES6+), HTML5, CSS3
+- **Backend & Database**: Supabase, PostgreSQL, Supabase JS SDK (`@supabase/supabase-js`), Row Level Security (RLS)
+- **Location & Matching**: Browser Geolocation API, Haversine Distance Formula Algorithm
+- **Version Control**: Git & GitHub
+- **Deployment & Hosting**: Vercel
+
+| Technology / Tool | Purpose |
 |---|---|
-| **React 19** | Modern component-based UI framework |
-| **Vite 8** | Next-generation frontend build tool and dev server |
-| **React Router v7** | Client-side routing and navigation |
-| **Supabase (PostgreSQL)** | Cloud database backend, REST APIs, and data persistence |
-| **Vanilla CSS** | Custom design system, CSS custom properties, and responsive grid layouts |
-| **Browser Geolocation API** | Captures device GPS coordinates for proximity calculations |
-| **Vercel** | Cloud deployment platform with continuous deployment & SPA rewrites |
+| **React 19 & Vite** | Modern component-based frontend framework and fast build tool |
+| **JavaScript (ES6+) & CSS3** | Dynamic application logic, responsive design tokens, and layout styling |
+| **React Router v7** | Single Page Application (SPA) client-side routing and navigation |
+| **Supabase (PostgreSQL)** | Cloud database backend, REST APIs, real-time data persistence, and RLS |
+| **Browser Geolocation API** | Device GPS coordinate acquisition for proximity matching |
+| **Git & GitHub** | Source code version control and team collaboration |
+| **Vercel** | Continuous production deployment with SPA rewrites (`vercel.json`) |
 
 ---
 
 ## 🤖 AI Tools Used
 
-- **Antigravity / Gemini 3.7 Flash**:
-  - Pair programming and architectural design of modular feature boundaries.
-  - Automated code scaffolding for reusable UI components and design system tokens.
-  - Implementation of regex validation and Haversine distance calculation utilities.
-  - Git merge conflict resolution and production deployment configuration (`vercel.json` SPA rewrites).
+- **ChatGPT / GitHub Copilot / Google Gemini**:
+  - Architectural design assistance and modular feature planning.
+  - Code scaffolding for reusable UI components and CSS layout styling.
+  - Implementation of regex validation patterns and Haversine distance calculation logic.
+  - Git conflict resolution and production deployment configuration (`vercel.json` SPA routing).
 
 ---
 
