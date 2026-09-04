@@ -1,70 +1,223 @@
-# GoviLink — Hyperlocal Sri Lankan Produce Platform
+# 🌾 GoviLink — Hyperlocal Sri Lankan Produce Platform
 
-GoviLink is a Sri Lankan hyperlocal agriculture platform designed to connect home-level growers and small-scale farmers having **5–20 kg surplus harvests** directly with nearby small buyers (households, boarding houses, local kaddes, and neighbourhood eateries).
+> **A hyperlocal agriculture platform connecting home-level growers and small-scale farmers having 5–20 kg surplus harvests directly with nearby small buyers.**
 
----
-
-## 🌾 The Problem & Solution
-
-- **The Problem:** Small growers harvest 5–20 kg of produce (papaya, gotukola, chilli, bananas, etc.) which is impractical to transport to distant wholesale economic centres (Dambulla, Manning Market), leading to high post-harvest loss or heavy middleman markups.
-- **The Solution:** GoviLink provides direct hyperlocal discovery within a 1–5 km radius, enabling same-day farm-to-table transactions with zero wholesale intermediaries.
+[![Deployed on Vercel](https://img.shields.io/badge/Vercel-Live_Deployment-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://govilink-seven.vercel.app/)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8.2-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
 
 ---
 
-## 🚀 Routes & Pages
+## 🔗 Project Links
 
-| Route | Page / Purpose | Feature Module |
-|---|---|---|
-| `/` | Landing / Home Page | Landing presentation & overview |
-| `/post-harvest` | Grower harvest submission | `src/features/harvest` |
-| `/find-produce` | Buyer search & radius filtering | `src/features/finder` |
-| `/listings` | Available produce directory | `src/features/marketplace` |
+- 🌐 **Deployed Application**: [https://govilink-seven.vercel.app/](https://govilink-seven.vercel.app/)
+- 🎥 **Demonstration Video**: [Watch Demo on Google Drive](https://drive.google.com/drive/folders/1UQKSbUaJUYEmwCieFpiZ-Opdj2Kd2NPg?usp=sharing)
 
 ---
 
-## 👥 4-Developer Branch Structure
+## 📌 The Selected Problem
 
-To minimize Git merge conflicts, developers should work within their designated feature folders:
+In Sri Lanka, millions of home gardeners, rooftop growers, and smallholders harvest surplus produce (papaya, gotukola, green chillies, bananas, drumsticks, etc.) in quantities ranging from **5 to 20 kg**.
 
-1. **Harvest Team (`features/harvest`)**:
-   - Location: `src/features/harvest/`
-   - Scope: Crop submission, harvest freshness, 5–20 kg batch logic, photo upload.
-
-2. **Finder / Search Team (`features/finder`)**:
-   - Location: `src/features/finder/`
-   - Scope: Buyer query search, radius filtering (1km/3km/5km), buyer matching.
-
-3. **Location Team (`features/location`)**:
-   - Location: `src/features/location/`
-   - Scope: Device geolocation API, GN division/town picker, distance calculation.
-
-4. **Marketplace Team (`features/marketplace`)**:
-   - Location: `src/features/marketplace/`
-   - Scope: Supabase live queries, listing feed, category filters, batch reserving.
+- **Wholesale Market Barrier**: Major economic centres (Dambulla, Manning Market, Meegoda) handle large wholesale consignments (500+ kg). A 10 kg batch is economically impractical to transport over long distances.
+- **High Post-Harvest Waste**: Due to the lack of immediate local visibility, fresh surplus often spoils in backyards.
+- **Inflated Retail Prices & Lost Freshness**: Nearby consumers (households, boarding houses, local kaddes, and small eateries) buy produce that has traveled hundreds of kilometers through intermediaries, paying high prices for diminished nutritional quality.
 
 ---
 
-## 🧩 Shared Reusable Components
+## 💡 The Proposed Solution
 
-Located in `src/components/` (and re-exported via `src/components/index.js`):
+**GoviLink** eliminates the wholesale intermediary barrier by enabling direct **hyperlocal discovery** within a 1–5 km radius:
 
-- **`Navbar`**: Responsive header with navigation links, brand logo, and mobile drawer.
-- **`Button`**: Primary, secondary, amber, outline, and ghost variants with size and icon support.
-- **`Input`**: Accessible inputs with label, helper, error, and unit prefix/suffix (e.g. `kg`, `Rs.`).
-- **`PageHeader`**: Inner page header banner with badge, breadcrumb back link, and action area.
-- **`ProduceCard`**: Agriculture produce card displaying batch size, price/kg, distance, freshness, and grower.
-- **`Footer`**: Sri Lankan community footer.
+1. **Right-Sized for 5–20 kg**: Purpose-built for small home garden batches.
+2. **Hyperlocal Discovery**: Matches small growers with neighbours and local food businesses within walking or short driving distance.
+3. **Farm-to-Table in Hours**: Consumers receive peak-freshness produce within hours of picking.
+4. **Fair Pricing**: Growers earn more than farm-gate wholesale rates, while buyers pay less than retail supermarket prices.
 
 ---
 
-## 🛠️ Development
+## ✨ Main Features
 
-Run the local development server:
-```bash
-npm run dev
+### 1. 🚜 Farmer Post-Harvest Portal (`/post-harvest`)
+- Simple listing creation tailored for 5–20 kg harvest batches.
+- Input validation: Required fields, positive quantity/price, valid Sri Lankan phone number format (`07XXXXXXXX` / `+947XXXXXXXX`).
+- One-click **"Use My Current Location"** button utilizing the browser Geolocation API to attach GPS coordinates.
+- Real-time feedback with instant success notification and graceful error handling.
+
+### 2. 🔍 Buyer Produce Finder (`/find-produce`)
+- Search by produce name (English, Sinhala, or Tamil common names).
+- Minimum quantity filter (`quantity_kg >= required_quantity`).
+- **Proximity-Based Sorting**: Computes Haversine distance in kilometers and sorts matching batches from **nearest to farthest**.
+- Direct **"Call Farmer"** action using native `tel:` links for immediate phone coordination.
+
+### 3. 🛒 Live Available Produce Marketplace (`/listings`)
+- Real-time catalog feed querying active (`available = true`) harvest listings from Supabase.
+- Instant category filter tabs (*All Produce*, *Vegetables*, *Fruits*, *Leafy Greens*, *Spices*).
+- Interactive **Batch Details Modal** displaying batch size, unit & total pricing, grower name, location, and direct call action.
+
+### 4. 📍 Geolocation & Distance Calculation Engine
+- Haversine formula calculation computing geodesic distance in kilometers between buyer and farmer coordinates.
+- Robust, non-blocking fallbacks when GPS access is disabled or unavailable.
+
+### 5. 🎨 Responsive Agriculture Design System
+- Modern Sri Lankan agricultural color palette (emerald green, forest green, harvest amber, and clean neutrals).
+- Custom typography using Google Fonts (*Outfit* and *Plus Jakarta Sans*).
+- Mobile-first responsive UI tested across mobile, tablet, and desktop viewports.
+
+---
+
+## 🛠️ Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| **React 19** | Modern component-based UI framework |
+| **Vite 8** | Next-generation frontend build tool and dev server |
+| **React Router v7** | Client-side routing and navigation |
+| **Supabase (PostgreSQL)** | Cloud database backend, REST APIs, and data persistence |
+| **Vanilla CSS** | Custom design system, CSS custom properties, and responsive grid layouts |
+| **Browser Geolocation API** | Captures device GPS coordinates for proximity calculations |
+| **Vercel** | Cloud deployment platform with continuous deployment & SPA rewrites |
+
+---
+
+## 🤖 AI Tools Used
+
+- **Antigravity / Gemini 3.7 Flash**:
+  - Pair programming and architectural design of modular feature boundaries.
+  - Automated code scaffolding for reusable UI components and design system tokens.
+  - Implementation of regex validation and Haversine distance calculation utilities.
+  - Git merge conflict resolution and production deployment configuration (`vercel.json` SPA rewrites).
+
+---
+
+## 👥 Team Member Details & Contributions
+
+| Student ID | Name | Feature / Module | Contribution Details |
+|---|---|---|---|
+| **IT24100168** | **HAMDHAN M.H** | **Harvest Module** | • Developed the Farmer Harvest Listing form (`HarvestForm.jsx`).<br>• Implemented client-side validation (regex, numeric constraints).<br>• Configured the Supabase client (`src/lib/supabase.js`) and database schema integration.<br>• Managed production deployment to Vercel and SPA rewrite routing. |
+| **IT24100382** | **HERATH H.M.P.C.B.** | **Finder Module** | • Developed the Buyer Produce Finder (`ProduceFinder.jsx`).<br>• Implemented crop query search and required quantity filtering logic.<br>• Integrated direct "Call Farmer" phone actions (`tel:` links).<br>• Built empty and error state feedback UI. |
+| **IT24103606** | **RATHNAYAKE R.M.P.T** | **Location Module** | • Implemented Geolocation API integration (`getCurrentLocation`).<br>• Developed the mathematical Haversine distance calculation utility in kilometers.<br>• Created the `sortByNearest` nearest-to-farthest sorting engine.<br>• Handled denied and unavailable location permission fallbacks. |
+| **IT24102876** | **NAWARATHNA I.G.D.S** | **Marketplace Module** | • Developed the Available Produce feed (`MarketplaceListingsPlaceholder.jsx`).<br>• Built real-time Supabase catalog queries.<br>• Implemented active category filtering tabs.<br>• Created the interactive Batch Details modal dialog. |
+
+---
+
+## 📂 Project Structure
+
+```
+govilink/
+├── public/
+│   └── _redirects                      # Netlify SPA routing rewrite
+├── src/
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Navbar.jsx & .css       # Responsive navigation bar
+│   │   │   ├── Button.jsx & .css       # Multi-variant button component
+│   │   │   ├── Input.jsx & .css        # Form input component with prefix/suffix
+│   │   │   ├── PageHeader.jsx & .css   # Standardized page banner
+│   │   │   ├── ProduceCard.jsx & .css  # Agriculture produce card
+│   │   │   └── Footer.jsx & .css       # Agricultural community footer
+│   │   └── index.js                    # Shared component barrel export
+│   ├── features/
+│   │   ├── harvest/                    # Farmer Harvest Submission feature
+│   │   │   ├── HarvestForm.jsx
+│   │   │   ├── harvest.css
+│   │   │   └── index.js
+│   │   ├── finder/                     # Buyer Produce Finder feature
+│   │   │   ├── ProduceFinder.jsx
+│   │   │   ├── finder.css
+│   │   │   └── index.js
+│   │   ├── location/                   # Geolocation & Distance Matching feature
+│   │   │   ├── locationUtils.js
+│   │   │   ├── location.css
+│   │   │   └── index.js
+│   │   └── marketplace/                # Live Marketplace & Catalog feature
+│   │       ├── MarketplaceListingsPlaceholder.jsx
+│   │       ├── marketplace.css
+│   │       └── index.js
+│   ├── pages/                          # Application route views
+│   │   ├── HomePage.jsx & .css
+│   │   ├── PostHarvestPage.jsx
+│   │   ├── FindProducePage.jsx
+│   │   ├── ListingsPage.jsx
+│   │   └── NotFoundPage.jsx
+│   ├── lib/
+│   │   └── supabase.js                 # Supabase client singleton
+│   ├── App.jsx                         # React Router route definitions
+│   ├── App.css                         # Global container styles
+│   ├── index.css                       # Design tokens & typography reset
+│   └── main.jsx                        # React root entry point
+├── .env.example                        # Environment variables template
+├── vercel.json                         # Vercel SPA routing rewrite rules
+└── package.json
 ```
 
-Build for production:
-```bash
-npm run build
-```
+---
+
+## 🚀 Installation & Execution Instructions
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (version 18.0 or higher recommended)
+- `npm` (bundled with Node.js)
+- A Supabase account with a `harvest_listings` table
+
+### Step-by-Step Setup
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/it24100168/govilink.git
+   cd govilink/govilink
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment Variables**:
+   Copy the `.env.example` file to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   Open `.env` and add your Supabase credentials:
+   ```env
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
+
+4. **Database Table Schema**:
+   In your Supabase SQL Editor, run the following table definition:
+   ```sql
+   CREATE TABLE IF NOT EXISTS harvest_listings (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     farmer_name TEXT NOT NULL,
+     produce TEXT NOT NULL,
+     quantity_kg NUMERIC NOT NULL,
+     price_per_kg NUMERIC NOT NULL,
+     location_name TEXT NOT NULL,
+     latitude FLOAT8,
+     longitude FLOAT8,
+     phone TEXT NOT NULL,
+     harvest_date DATE NOT NULL,
+     available BOOLEAN DEFAULT true,
+     created_at TIMESTAMPTZ DEFAULT now()
+   );
+   ```
+
+5. **Start the Development Server**:
+   ```bash
+   npm run dev
+   ```
+   Open your browser and navigate to `http://localhost:5173`.
+
+6. **Build for Production**:
+   ```bash
+   npm run build
+   ```
+   The compiled production output will be in the `dist/` directory.
+
+---
+
+## 📄 License
+
+This project was developed for academic and educational evaluation as part of the **SE3090 Mini Hackathon**. All rights reserved © 2026 GoviLink Sri Lanka.
