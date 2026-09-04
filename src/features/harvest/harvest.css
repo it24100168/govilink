@@ -1,12 +1,13 @@
-.harvest-placeholder-container {
+.harvest-form-container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 640px;
+  max-width: 760px;
   margin: 0 auto;
   width: 100%;
 }
 
+/* Feature Branch Notice */
 .feature-dev-notice {
   background-color: var(--amber-50);
   border: 1px solid var(--amber-200);
@@ -24,11 +25,13 @@
   line-height: 1.45;
 }
 
+/* Form Card */
 .harvest-form-card {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   text-align: left;
+  background: var(--bg-surface);
 }
 
 .harvest-card-header {
@@ -48,30 +51,286 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .harvest-form-title {
   font-size: 1.35rem;
+  color: var(--text-main);
+  line-height: 1.2;
 }
 
-.harvest-mock-form {
+.harvest-card-header p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Form Structure */
+.harvest-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.35rem;
 }
 
 .harvest-grid-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
-@media (min-width: 540px) {
+@media (min-width: 600px) {
   .harvest-grid-row {
     grid-template-columns: 1fr 1fr;
   }
 }
 
+/* Quick Suggestion Chips */
+.harvest-quick-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.quick-suggestion-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.quick-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.quick-chip {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.quick-chip:hover {
+  border-color: var(--primary-400);
+  background-color: var(--primary-50);
+  color: var(--primary-800);
+}
+
+.quick-chip.active {
+  background-color: var(--primary-700);
+  color: #ffffff;
+  border-color: var(--primary-700);
+}
+
+/* Info Callout */
+.harvest-info-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background-color: var(--primary-50);
+  border: 1px solid var(--primary-200);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  height: fit-content;
+  align-self: center;
+}
+
+.info-callout-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.info-callout-text {
+  font-size: 0.8125rem;
+  color: var(--primary-900);
+  line-height: 1.45;
+}
+
+/* Coordinate Section */
+.harvest-coords-section {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-main);
+  overflow: hidden;
+}
+
+.coords-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  background-color: var(--bg-subtle);
+  transition: background-color var(--transition-fast);
+}
+
+.coords-header:hover {
+  background-color: #e2e8f0;
+}
+
+.coords-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.coords-title {
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.coords-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--primary-700);
+  cursor: pointer;
+}
+
+.coords-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border-light);
+  background-color: var(--bg-surface);
+}
+
+.coords-helper-text {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* Success Card */
+.harvest-success-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid var(--primary-300);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+@media (min-width: 600px) {
+  .harvest-success-card {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.harvest-success-icon-wrap {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-600);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.3);
+}
+
+.harvest-success-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.harvest-success-title {
+  font-size: 1.4rem;
+  color: var(--primary-950);
+}
+
+.harvest-success-desc {
+  font-size: 0.95rem;
+  color: var(--primary-900);
+  line-height: 1.5;
+}
+
+.harvest-success-details-pill {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.harvest-success-details-pill span {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--primary-200);
+  border-radius: var(--radius-full);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--primary-900);
+}
+
+.harvest-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Error Alert */
+.harvest-error-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  color: #991b1b;
+}
+
+.harvest-error-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.harvest-error-text {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.harvest-error-text strong {
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+/* Form Actions */
 .harvest-form-actions {
   margin-top: 0.5rem;
+}
+
+/* Spinner */
+.govi-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

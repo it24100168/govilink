@@ -1,5 +1,5 @@
 import { PageHeader } from '../components';
-import { PostHarvestPlaceholder } from '../features/harvest';
+import { HarvestForm } from '../features/harvest';
 
 /**
  * Route: /post-harvest
@@ -18,7 +18,7 @@ export default function PostHarvestPage() {
 
       <div className="section section-white">
         <div className="container">
-          <PostHarvestPlaceholder />
+          <HarvestForm />
         </div>
       </div>
     </div>
