@@ -1,0 +1,145 @@
+.produce-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  text-align: left;
+}
+
+.produce-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-300);
+}
+
+.produce-card-header {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(135deg, var(--primary-100) 0%, #e0f2fe 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.produce-card-emoji-wrap {
+  font-size: 3.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+  transition: transform var(--transition-fast);
+}
+
+.produce-card:hover .produce-card-emoji-wrap {
+  transform: scale(1.08);
+}
+
+.produce-card-badge-top {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+}
+
+.produce-card-freshness {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.produce-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: 0.75rem;
+}
+
+.produce-card-title-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.produce-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+
+.produce-card-local-name {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.produce-card-metrics {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-top: 1px dashed var(--border-light);
+  border-bottom: 1px dashed var(--border-light);
+}
+
+.produce-card-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.produce-card-price-val {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-900);
+}
+
+.produce-card-price-unit {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.produce-card-qty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.produce-card-qty-val {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--amber-700);
+}
+
+.produce-card-qty-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.produce-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.produce-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.produce-card-meta-icon {
+  color: var(--primary-700);
+  flex-shrink: 0;
+}
+
+.produce-card-footer {
+  padding: 0 1.25rem 1.25rem;
+  margin-top: auto;
+}

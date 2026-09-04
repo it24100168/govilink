@@ -1,0 +1,77 @@
+.harvest-placeholder-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.feature-dev-notice {
+  background-color: var(--amber-50);
+  border: 1px solid var(--amber-200);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.feature-dev-text {
+  font-size: 0.875rem;
+  color: var(--amber-700);
+  line-height: 1.45;
+}
+
+.harvest-form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.harvest-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.harvest-icon-bubble {
+  font-size: 2.25rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: var(--primary-100);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.harvest-form-title {
+  font-size: 1.35rem;
+}
+
+.harvest-mock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.harvest-grid-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 540px) {
+  .harvest-grid-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.harvest-form-actions {
+  margin-top: 0.5rem;
+}

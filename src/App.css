@@ -1,0 +1,36 @@
+/* App layout styling */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.page-wrapper {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Common Section Spacing */
+.section {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+.section-subtle {
+  background-color: var(--primary-50);
+  border-top: 1px solid var(--primary-100);
+  border-bottom: 1px solid var(--primary-100);
+}
+
+.section-white {
+  background-color: var(--bg-surface);
+}

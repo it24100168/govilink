@@ -1,0 +1,88 @@
+.finder-placeholder-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.finder-search-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.finder-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.finder-icon-bubble {
+  font-size: 2.25rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  background-color: var(--badge-blue-bg);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.finder-form-title {
+  font-size: 1.35rem;
+}
+
+.finder-mock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.finder-grid-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 580px) {
+  .finder-grid-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.finder-mock-radius-tabs {
+  display: flex;
+  gap: 0.35rem;
+  background-color: var(--bg-subtle);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.radius-tab {
+  flex: 1;
+  padding: 0.45rem 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: not-allowed;
+  text-align: center;
+}
+
+.radius-tab.active {
+  background-color: var(--bg-surface);
+  color: var(--primary-800);
+  box-shadow: var(--shadow-sm);
+}
+
+.finder-form-actions {
+  margin-top: 0.5rem;
+}

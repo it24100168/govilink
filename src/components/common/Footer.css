@@ -1,0 +1,95 @@
+.govi-footer {
+  background-color: var(--primary-950);
+  color: #e2e8f0;
+  padding: 3.5rem 0 1.5rem;
+  border-top: 1px solid var(--primary-900);
+  margin-top: auto;
+}
+
+.govi-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .govi-footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.govi-footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.govi-footer-title {
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+}
+
+.govi-footer-title span {
+  color: var(--primary-400);
+}
+
+.govi-footer-desc {
+  color: #94a3b8;
+  font-size: 0.925rem;
+  line-height: 1.6;
+  max-width: 440px;
+}
+
+.govi-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.govi-footer-heading {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.govi-footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.govi-footer-link {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.govi-footer-link:hover {
+  color: var(--primary-300);
+}
+
+.govi-footer-bottom {
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: #64748b;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .govi-footer-bottom {
+    flex-direction: row;
+    text-align: left;
+  }
+}

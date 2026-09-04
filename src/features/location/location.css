@@ -1,0 +1,35 @@
+.location-badge-wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.location-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8125rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.location-pin-icon {
+  font-size: 0.95rem;
+}
+
+.location-text {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.location-dev-tag {
+  background-color: var(--badge-blue-bg);
+  color: var(--badge-blue-text);
+  font-size: 0.65rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-full);
+}

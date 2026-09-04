@@ -1,0 +1,80 @@
+.govi-page-header {
+  background: linear-gradient(180deg, var(--primary-50) 0%, rgba(240, 253, 244, 0.4) 100%);
+  border-bottom: 1px solid var(--primary-100);
+  padding: 2.5rem 0;
+}
+
+@media (min-width: 768px) {
+  .govi-page-header {
+    padding: 3.5rem 0;
+  }
+}
+
+.govi-header-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .govi-header-inner {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.govi-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 720px;
+}
+
+.govi-header-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.25rem;
+}
+
+.govi-header-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.govi-header-back:hover {
+  color: var(--primary-700);
+}
+
+.govi-header-title {
+  font-size: 2rem;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .govi-header-title {
+    font-size: 2.5rem;
+  }
+}
+
+.govi-header-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.govi-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
