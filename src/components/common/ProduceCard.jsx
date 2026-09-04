@@ -16,16 +16,18 @@ import './ProduceCard.css';
  * @param {number|string} price - Alias for pricePerKg
  * @param {string} location - Neighbourhood / Town (e.g. "Kaduwela", "Maharagama")
  * @param {string} locationName - Alias for location
- * @param {string} distance - Calculated distance (e.g. "1.2 km away")
+ * @param {string} distance - Calculated distance in km (e.g. "1.2 km away")
  * @param {string} freshness - Harvest status (e.g. "Harvested Today", "Ready for Pickup")
  * @param {string} harvestDate - Date of harvest (e.g. "2026-09-04")
  * @param {string} farmerName - Farmer / Grower name (e.g. "Kamal • Home Garden")
  * @param {string} grower - Alias for farmerName
- * @param {string} phone - Farmer contact phone number for tel: link
+ * @param {string} phone - Farmer phone number (for tel: direct call link)
  * @param {string} phoneNumber - Alias for phone
  * @param {string} emoji - Icon representation
  * @param {Function} onSelect - Optional click handler
  * @param {React.ReactNode} action - Optional custom action node
+ * @param {string} actionText - Label for default action button
+ * @param {string} actionTo - Destination path if navigating
  */
 export default function ProduceCard({
   id,
@@ -50,6 +52,8 @@ export default function ProduceCard({
   emoji = '🌱',
   onSelect,
   action,
+  actionText,
+  actionTo,
   className = '',
 }) {
   const displayTitle = produce || title || 'Fresh Produce';
@@ -75,7 +79,7 @@ export default function ProduceCard({
       return d.toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'short',
-        year: 'numeric'
+        year: 'numeric',
       });
     } catch {
       return dateStr;
@@ -160,29 +164,31 @@ export default function ProduceCard({
         {action ? (
           action
         ) : contactPhone ? (
-          <a
+          <Button
+            variant="primary"
+            size="sm"
+            fullWidth
             href={`tel:${contactPhone}`}
-            className="btn btn-primary btn-sm produce-card-call-btn"
-            id={`call-farmer-${id || displayTitle}`.toLowerCase().replace(/[^a-z0-9]/g, '-')}
+            icon={
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            }
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-            </svg>
-            Call Farmer
-          </a>
+            Call Farmer ({contactPhone})
+          </Button>
         ) : (
           <Button
             variant="secondary"
             size="sm"
             fullWidth
             onClick={onSelect}
-            to="/listings"
+            to={onSelect ? undefined : (actionTo || '/listings')}
           >
-            View Batch Details
+            {actionText || 'View Batch Details'}
           </Button>
         )}
       </div>
     </article>
   );
 }
-

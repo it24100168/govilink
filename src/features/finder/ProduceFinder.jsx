@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Button, Input, ProduceCard } from '../../components';
-import { supabase } from '../../lib/supabase';
+import { getCurrentLocation, sortByNearest } from '../location';
+import supabaseClient, { supabase as namedSupabase } from '../../lib/supabase';
 import './finder.css';
+
+// Support both named and default exports from src/lib/supabase.js
+const supabase = namedSupabase || supabaseClient;
 
 /**
  * Helper to pick a produce emoji based on crop name
@@ -14,18 +18,62 @@ function getProduceEmoji(name = '') {
   if (lower.includes('banana') || lower.includes('kesel')) return '🍌';
   if (lower.includes('bean') || lower.includes('dambala')) return '🥬';
   if (lower.includes('kohila') || lower.includes('root') || lower.includes('ala')) return '🌱';
-  return '🥦';
+  if (lower.includes('murunga') || lower.includes('drumstick')) return '🥦';
+  return '🌱';
 }
+
+/**
+ * Quick search suggestion tags for buyers
+ */
+const QUICK_BUYER_SUGGESTIONS = [
+  'Gotukola',
+  'Organic Papaya',
+  'Green Chilli',
+  'Kohila',
+  'Ambul Banana',
+  'Winged Beans',
+];
 
 export default function ProduceFinder() {
   const [produceQuery, setProduceQuery] = useState('');
   const [quantityKg, setQuantityKg] = useState('');
   const [errors, setErrors] = useState({});
 
+  // Geolocation states
+  const [buyerCoords, setBuyerCoords] = useState({ latitude: null, longitude: null });
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationStatus, setLocationStatus] = useState(null);
+  const [locationNotice, setLocationNotice] = useState(null);
+
+  // Search execution states
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [results, setResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Trigger manual location capture
+  const handleCaptureLocation = async () => {
+    setDetectingLocation(true);
+    setLocationNotice(null);
+
+    try {
+      const loc = await getCurrentLocation();
+      if (loc.success && loc.latitude && loc.longitude) {
+        setBuyerCoords({ latitude: loc.latitude, longitude: loc.longitude });
+        setLocationStatus(`📍 Location active (${loc.latitude.toFixed(3)}, ${loc.longitude.toFixed(3)})`);
+        setLocationNotice(null);
+        return { latitude: loc.latitude, longitude: loc.longitude };
+      } else {
+        setLocationNotice(loc.error || 'Location access denied. Listings will be displayed without distance sorting.');
+        return null;
+      }
+    } catch (err) {
+      setLocationNotice('Unable to access geolocation. Please check browser permissions.');
+      return null;
+    } finally {
+      setDetectingLocation(false);
+    }
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -56,10 +104,30 @@ export default function ProduceFinder() {
     setResults([]);
 
     try {
-      const requiredQty = Number(quantityKg);
-      const searchTerm = produceQuery.trim().toLowerCase();
+      // 1. Check or retrieve buyer location for Haversine distance calculations
+      let currentLat = buyerCoords.latitude;
+      let currentLon = buyerCoords.longitude;
 
-      // Query harvest_listings from Supabase where available = true
+      if (!currentLat || !currentLon) {
+        setDetectingLocation(true);
+        const loc = await getCurrentLocation();
+        setDetectingLocation(false);
+
+        if (loc.success && loc.latitude && loc.longitude) {
+          currentLat = loc.latitude;
+          currentLon = loc.longitude;
+          setBuyerCoords({ latitude: loc.latitude, longitude: loc.longitude });
+          setLocationStatus(`📍 Location active (${loc.latitude.toFixed(3)}, ${loc.longitude.toFixed(3)})`);
+        } else {
+          setLocationNotice(loc.error || 'Location access unavailable. Displaying results without distance sorting.');
+        }
+      }
+
+      // 2. Fetch available listings from Supabase where available = true
+      if (!supabase || typeof supabase.from !== 'function') {
+        throw new Error('Supabase client is not configured. Please check your Supabase environment variables in .env.');
+      }
+
       const { data, error } = await supabase
         .from('harvest_listings')
         .select('*')
@@ -69,18 +137,27 @@ export default function ProduceFinder() {
         throw error;
       }
 
-      // Filter results:
-      // 1. Matching selected/entered produce case-insensitively
-      // 2. Only keep listings where quantity_kg >= buyer required quantity
+      const requiredQty = Number(quantityKg);
+      const searchTerm = produceQuery.trim().toLowerCase();
+
+      // 3. Filter listings:
+      // - Matches produce name (case-insensitive substring)
+      // - Available quantity >= required quantity
       const matched = (data || []).filter((item) => {
         const matchesProduce = item.produce && item.produce.toLowerCase().includes(searchTerm);
         const matchesQty = Number(item.quantity_kg) >= requiredQty;
         return matchesProduce && matchesQty;
       });
 
-      setResults(matched);
+      // 4. Calculate Haversine distance and sort nearest to farthest
+      if (currentLat && currentLon && matched.length > 0) {
+        const sortedListings = sortByNearest(matched, currentLat, currentLon);
+        setResults(sortedListings);
+      } else {
+        setResults(matched);
+      }
     } catch (err) {
-      console.error('Error fetching produce listings:', err);
+      console.error('Error searching produce listings:', err);
       setApiError(err.message || 'Failed to search produce listings. Please try again.');
     } finally {
       setLoading(false);
@@ -94,16 +171,38 @@ export default function ProduceFinder() {
         <div className="finder-card-header">
           <div className="finder-icon-bubble">🔍</div>
           <div>
-            <h2 className="finder-form-title">Find Fresh Produce</h2>
-            <p>Connect directly with small-batch harvests in your area</p>
+            <h2 className="finder-form-title">Find Nearby Fresh Produce</h2>
+            <p>Connect directly with small-batch harvests in your immediate area</p>
           </div>
         </div>
 
         <form className="finder-form" onSubmit={handleSearch} noValidate>
+          {/* Quick Suggestions */}
+          <div className="finder-quick-tags">
+            <span className="finder-quick-label">Popular in Sri Lanka:</span>
+            <div className="finder-tag-group">
+              {QUICK_BUYER_SUGGESTIONS.map((item) => (
+                <button
+                  type="button"
+                  key={item}
+                  className={`finder-tag ${produceQuery.toLowerCase().includes(item.toLowerCase()) ? 'active' : ''}`}
+                  onClick={() => {
+                    setProduceQuery(item);
+                    if (errors.produce) {
+                      setErrors((prev) => ({ ...prev, produce: null }));
+                    }
+                  }}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <Input
             id="finder-produce-input"
             label="Produce required"
-            placeholder="e.g. Gotukola, Green Chilli, Papaya, Drumstick"
+            placeholder="e.g. Gotukola, Green Chilli, Papaya, Drumstick (Murunga)"
             value={produceQuery}
             onChange={(e) => {
               setProduceQuery(e.target.value);
@@ -127,8 +226,8 @@ export default function ProduceFinder() {
               id="finder-quantity-input"
               label="Required quantity in kg"
               type="number"
-              min="1"
-              step="any"
+              min="0.5"
+              step="0.5"
               placeholder="e.g. 5"
               value={quantityKg}
               onChange={(e) => {
@@ -140,9 +239,47 @@ export default function ProduceFinder() {
               error={errors.quantity}
               required
               suffix="kg"
-              helper="Specify batch quantity required"
+              helper="We will only show harvests with at least this quantity available"
             />
           </div>
+
+          {/* Location Capture Strip */}
+          <div className="finder-location-strip">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={handleCaptureLocation}
+              disabled={detectingLocation}
+              icon={
+                detectingLocation ? (
+                  <span className="govi-spinner" style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%' }}></span>
+                ) : (
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="22" y1="12" x2="18" y2="12" />
+                    <line x1="6" y1="12" x2="2" y2="12" />
+                    <line x1="12" y1="6" x2="12" y2="2" />
+                    <line x1="12" y1="22" x2="12" y2="18" />
+                  </svg>
+                )
+              }
+            >
+              {detectingLocation ? 'Detecting Location...' : buyerCoords.latitude ? 'Update My Location' : 'Use My Current Location'}
+            </Button>
+
+            {locationStatus && (
+              <span className="badge badge-green">
+                {locationStatus}
+              </span>
+            )}
+          </div>
+
+          {locationNotice && (
+            <div className="finder-location-notice" role="status">
+              <span>ℹ️ {locationNotice}</span>
+            </div>
+          )}
 
           <div className="finder-form-actions">
             <Button
@@ -151,8 +288,18 @@ export default function ProduceFinder() {
               size="lg"
               fullWidth
               disabled={loading}
+              icon={
+                loading ? (
+                  <span className="govi-spinner" style={{ display: 'inline-block', width: 16, height: 16, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%' }}></span>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                )
+              }
             >
-              {loading ? 'Searching Harvests...' : 'Find Produce'}
+              {loading ? 'Searching Nearest Harvests...' : 'Find Nearest Produce'}
             </Button>
           </div>
         </form>
@@ -163,7 +310,7 @@ export default function ProduceFinder() {
         <div className="finder-state-box card finder-loading-box">
           <div className="finder-spinner" role="status" aria-label="Loading"></div>
           <p className="finder-state-title">Searching available harvest listings...</p>
-          <p className="finder-state-desc">Fetching small-batch farmers matching your criteria</p>
+          <p className="finder-state-desc">Calculating nearest small-batch growers matching your required quantity</p>
         </div>
       )}
 
@@ -183,41 +330,58 @@ export default function ProduceFinder() {
       {!loading && !apiError && hasSearched && results.length === 0 && (
         <div className="finder-state-box card finder-no-results-box">
           <div className="finder-state-icon">🌱</div>
-          <h3 className="finder-state-title">No matching produce found</h3>
+          <h3 className="finder-state-title">No matching harvests found</h3>
           <p className="finder-state-desc">
             We couldn't find any available harvest of <strong>"{produceQuery}"</strong> with at least{' '}
-            <strong>{quantityKg} kg</strong> available.
+            <strong>{quantityKg} kg</strong> available right now.
           </p>
           <p className="finder-state-subtext">
-            Try adjusting your produce search term or lowering the required quantity.
+            Try searching for a broader term or lowering the required quantity to match smaller home garden batches.
           </p>
         </div>
       )}
 
-      {/* Matching Results State */}
+      {/* Matching Results State (Sorted Nearest to Farthest) */}
       {!loading && !apiError && hasSearched && results.length > 0 && (
-        <div className="finder-results-section">
+        <div className="finder-results-section animate-fade-in">
           <div className="finder-results-header">
-            <h3 className="finder-results-title">
-              Matching Harvests ({results.length})
-            </h3>
-            <span className="badge badge-green">Available Now</span>
+            <div>
+              <h3 className="finder-results-title">
+                Matching Harvests ({results.length})
+              </h3>
+              <p className="finder-results-subtitle">
+                {buyerCoords.latitude && buyerCoords.longitude
+                  ? 'Sorted nearest to farthest based on your GPS location'
+                  : 'Filtered by required quantity and availability'}
+              </p>
+            </div>
+            <span className="badge badge-green">Ready for Direct Pickup</span>
           </div>
 
           <div className="grid-3 finder-results-grid">
-            {results.map((item) => (
-              <ProduceCard
-                key={item.id}
-                title={item.produce}
-                grower={item.farmer_name || 'Local Farmer'}
-                quantityKg={`${item.quantity_kg} kg available`}
-                pricePerKg={item.price_per_kg}
-                location={item.location_name || 'Local District'}
-                distance="Distance pending"
-                freshness={item.harvest_date ? `Harvested ${item.harvest_date}` : 'Available'}
-                emoji={getProduceEmoji(item.produce)}
-              />
-            ))}
+            {results.map((item) => {
+              const distanceDisplay =
+                typeof item.distance === 'number'
+                  ? `${item.distance} km away`
+                  : item.location_name
+                  ? 'Location on record'
+                  : 'Distance pending';
+
+              return (
+                <ProduceCard
+                  key={item.id || `${item.farmer_name}-${item.produce}-${item.created_at}`}
+                  title={item.produce}
+                  grower={item.farmer_name || 'Local Home Grower'}
+                  quantityKg={`${item.quantity_kg} kg available`}
+                  pricePerKg={item.price_per_kg}
+                  location={item.location_name || 'Sri Lanka'}
+                  distance={distanceDisplay}
+                  freshness={item.harvest_date ? `Harvested ${item.harvest_date}` : 'Fresh Harvest'}
+                  phone={item.phone}
+                  emoji={getProduceEmoji(item.produce)}
+                />
+              );
+            })}
           </div>
         </div>
       )}

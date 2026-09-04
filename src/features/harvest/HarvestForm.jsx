@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Input } from '../../components';
+import { getCurrentLocation } from '../location';
 import supabaseClient, { supabase as namedSupabase } from '../../lib/supabase';
 import './harvest.css';
 
@@ -46,7 +47,7 @@ function isValidSriLankanPhone(phone) {
 
 /**
  * Farmer Harvest Submission Form Component
- * Handles validation, coordinate readiness, and Supabase insertion to `harvest_listings`
+ * Handles validation, coordinate capture via location module, and Supabase insertion to `harvest_listings`
  */
 export default function HarvestForm({
   initialLatitude = null,
@@ -66,6 +67,11 @@ export default function HarvestForm({
   const [submittedData, setSubmittedData] = useState(null);
   const [showCoordinateSettings, setShowCoordinateSettings] = useState(false);
 
+  // Location capture states
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationStatus, setLocationStatus] = useState(null);
+  const [locationError, setLocationError] = useState(null);
+
   // Field change handler
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -81,6 +87,31 @@ export default function HarvestForm({
   const handleBlur = (field) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
     validateField(field, formData[field]);
+  };
+
+  // Location capture handler
+  const handleUseCurrentLocation = async () => {
+    setDetectingLocation(true);
+    setLocationError(null);
+    setLocationStatus(null);
+
+    try {
+      const loc = await getCurrentLocation();
+      if (loc.success && loc.latitude && loc.longitude) {
+        setFormData((prev) => ({
+          ...prev,
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+        }));
+        setLocationStatus(`Captured: ${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`);
+      } else {
+        setLocationError(loc.error || 'Unable to retrieve your location. Please check browser permissions.');
+      }
+    } catch (err) {
+      setLocationError('An error occurred while accessing geolocation.');
+    } finally {
+      setDetectingLocation(false);
+    }
   };
 
   // Single field validation
@@ -221,7 +252,7 @@ export default function HarvestForm({
       // Gracefully verify Supabase client
       if (!supabase || typeof supabase.from !== 'function') {
         throw new Error(
-          'Supabase client is not initialized in src/lib/supabase.js. Please check your Supabase credentials or environment variables.'
+          'Supabase client is not initialized in src/lib/supabase.js. Please check your Supabase credentials in .env.'
         );
       }
 
@@ -261,6 +292,8 @@ export default function HarvestForm({
         ...INITIAL_FORM_STATE,
         harvestDate: new Date().toISOString().split('T')[0],
       });
+      setLocationStatus(null);
+      setLocationError(null);
       setErrors({});
       setTouched({});
 
@@ -280,6 +313,8 @@ export default function HarvestForm({
   const handleReset = () => {
     setSubmittedData(null);
     setSubmitError(null);
+    setLocationStatus(null);
+    setLocationError(null);
     setFormData({
       ...INITIAL_FORM_STATE,
       harvestDate: new Date().toISOString().split('T')[0],
@@ -312,6 +347,9 @@ export default function HarvestForm({
               <span>💰 <strong>Rs. {submittedData.price_per_kg}/kg</strong></span>
               <span>📍 <strong>{submittedData.location_name}</strong></span>
               <span>📞 <strong>{submittedData.phone}</strong></span>
+              {submittedData.latitude && submittedData.longitude && (
+                <span>📍 <strong>GPS Coordinates Attached</strong></span>
+              )}
             </div>
 
             <div className="harvest-success-actions">
@@ -429,18 +467,63 @@ export default function HarvestForm({
 
           {/* Row 3: Location Name & Phone Number */}
           <div className="harvest-grid-row">
-            <Input
-              id="harvest-location-name"
-              label="Location / Area Name"
-              placeholder="e.g. Kaduwela, Maharagama, Gampaha"
-              prefix="📍"
-              value={formData.locationName}
-              onChange={(e) => handleChange('locationName', e.target.value)}
-              onBlur={() => handleBlur('locationName')}
-              error={touched.locationName ? errors.locationName : undefined}
-              helper="Your village, town, or neighbourhood"
-              required
-            />
+            <div className="harvest-location-field-wrapper">
+              <Input
+                id="harvest-location-name"
+                label="Location / Area Name"
+                placeholder="e.g. Kaduwela, Maharagama, Gampaha"
+                prefix="📍"
+                value={formData.locationName}
+                onChange={(e) => handleChange('locationName', e.target.value)}
+                onBlur={() => handleBlur('locationName')}
+                error={touched.locationName ? errors.locationName : undefined}
+                helper="Your village, town, or neighbourhood"
+                required
+              />
+
+              {/* Location Capture Button */}
+              <div className="harvest-location-capture-strip">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleUseCurrentLocation}
+                  disabled={detectingLocation}
+                  icon={
+                    detectingLocation ? (
+                      <span className="govi-spinner" style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid currentColor', borderTopColor: 'transparent', borderRadius: '50%' }}></span>
+                    ) : (
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="22" y1="12" x2="18" y2="12" />
+                        <line x1="6" y1="12" x2="2" y2="12" />
+                        <line x1="12" y1="6" x2="12" y2="2" />
+                        <line x1="12" y1="22" x2="12" y2="18" />
+                      </svg>
+                    )
+                  }
+                >
+                  {detectingLocation ? 'Detecting Location...' : 'Use My Current Location'}
+                </Button>
+
+                {locationStatus && (
+                  <span className="badge badge-green" title="GPS Coordinates captured">
+                    ✓ {locationStatus}
+                  </span>
+                )}
+                {formData.latitude && formData.longitude && !locationStatus && (
+                  <span className="badge badge-blue">
+                    📍 Coordinates set: {Number(formData.latitude).toFixed(4)}, {Number(formData.longitude).toFixed(4)}
+                  </span>
+                )}
+              </div>
+
+              {locationError && (
+                <div className="harvest-inline-warning" role="alert">
+                  <span>⚠️ {locationError}</span>
+                </div>
+              )}
+            </div>
 
             <Input
               id="harvest-phone"
@@ -480,13 +563,15 @@ export default function HarvestForm({
             </div>
           </div>
 
-          {/* COORDINATE READINESS SECTION (For Location Module Integration) */}
+          {/* COORDINATE ADVANCED VIEW */}
           <div className="harvest-coords-section">
             <div className="coords-header" onClick={() => setShowCoordinateSettings((p) => !p)}>
               <div className="coords-title-wrap">
-                <span className="badge badge-blue">Location Ready</span>
+                <span className="badge badge-blue">GPS Coordinates</span>
                 <span className="coords-title">
-                  Coordinates: {formData.latitude && formData.longitude ? `${formData.latitude}, ${formData.longitude}` : 'Not specified (Ready for location module)'}
+                  {formData.latitude && formData.longitude
+                    ? `Attached: ${Number(formData.latitude).toFixed(4)}, ${Number(formData.longitude).toFixed(4)}`
+                    : 'Coordinates optional (Click "Use My Current Location" above or enter manually)'}
                 </span>
               </div>
               <button
@@ -495,14 +580,14 @@ export default function HarvestForm({
                 aria-label="Toggle Coordinates"
                 aria-expanded={showCoordinateSettings}
               >
-                {showCoordinateSettings ? 'Hide' : 'Configure (Optional)'}
+                {showCoordinateSettings ? 'Hide' : 'Manual Coordinates'}
               </button>
             </div>
 
             {showCoordinateSettings && (
               <div className="coords-body animate-fade-in">
                 <p className="coords-helper-text">
-                  These fields store GPS latitude and longitude for the location matching algorithm. They will be automatically populated once the location module is integrated.
+                  These GPS coordinates enable buyers nearby to see exact distance (in km) to your harvest batch.
                 </p>
                 <div className="harvest-grid-row">
                   <Input

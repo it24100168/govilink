@@ -52,16 +52,76 @@
   gap: 1.25rem;
 }
 
+/* Quick Tags */
+.finder-quick-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-subtle, #f8fafc);
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border-light, #e2e8f0);
+}
+
+.finder-quick-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.finder-tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.finder-tag {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--border-light, #e2e8f0);
+  background-color: var(--bg-surface, #ffffff);
+  color: var(--text-main, #0f172a);
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+}
+
+.finder-tag:hover {
+  border-color: var(--primary-400, #4ade80);
+  background-color: var(--primary-50, #f0fdf4);
+  color: var(--primary-800, #166534);
+}
+
+.finder-tag.active {
+  background-color: var(--primary-700, #15803d);
+  color: #ffffff;
+  border-color: var(--primary-700, #15803d);
+}
+
 .finder-grid-row {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
 }
 
-@media (min-width: 580px) {
-  .finder-grid-row {
-    grid-template-columns: 1fr;
-  }
+/* Location Strip */
+.finder-location-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.finder-location-notice {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm, 6px);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  color: #b45309;
 }
 
 .finder-form-actions {
@@ -142,10 +202,13 @@
 
 .finder-results-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-light, #e2e8f0);
+  text-align: left;
 }
 
 .finder-results-title {
@@ -153,6 +216,12 @@
   font-weight: 700;
   color: var(--text-dark, #1f2937);
   margin: 0;
+}
+
+.finder-results-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  margin-top: 0.2rem;
 }
 
 .finder-results-grid {

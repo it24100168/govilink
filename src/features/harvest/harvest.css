@@ -158,6 +158,29 @@
   line-height: 1.45;
 }
 
+/* Location Capture Field & Button */
+.harvest-location-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.harvest-location-capture-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.harvest-inline-warning {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8125rem;
+  color: #b45309;
+}
+
 /* Coordinate Section */
 .harvest-coords-section {
   border: 1px solid var(--border-light);
